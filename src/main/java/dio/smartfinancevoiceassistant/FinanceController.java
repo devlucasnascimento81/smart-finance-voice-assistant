@@ -53,4 +53,13 @@ public class FinanceController {
                 "transactions", assistantService.getTransactions()
         ));
     }
+
+    // Endpoint da melhoria: Resumo de despesas agrupadas por categoria
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Object>> getSummary() {
+        return ResponseEntity.ok(Map.of(
+                "totalBalance", assistantService.getBalance(),
+                "expensesByCategory", assistantService.getExpensesByCategory()
+        ));
+    }
 }

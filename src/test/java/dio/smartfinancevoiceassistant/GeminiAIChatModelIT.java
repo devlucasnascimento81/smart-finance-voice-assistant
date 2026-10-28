@@ -29,5 +29,9 @@ public class GeminiAIChatModelIT {
         // 3. Testa comando de extrato
         String extratoResponse = assistantService.processVoiceOrTextMessage("Quero ver meu extrato");
         System.out.println("\n--- RELATÓRIO DO ASSISTENTE ---\n" + extratoResponse);
+
+        // 4. Testa a melhoria de resumo por categoria
+        String categoriaResponse = assistantService.processVoiceOrTextMessage("Mostrar resumo por categoria");
+        System.out.println("Comando 4: " + categoriaResponse);
     }
 }

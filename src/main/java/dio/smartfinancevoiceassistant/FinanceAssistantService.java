@@ -54,6 +54,15 @@ public class FinanceAssistantService {
             return "Receita de R$ " + amount + " adicionada com sucesso! Seu novo saldo é R$ " + balance + ".";
         }
 
+        // 5. Consulta de resumo por categoria
+        if (lower.contains("categoria") || lower.contains("resumo")) {
+            Map<String, BigDecimal> categories = getExpensesByCategory();
+            if (categories.isEmpty()) return "Nenhum gasto por categoria registrado.";
+            StringBuilder sb = new StringBuilder("Gastos por categoria:\n");
+            categories.forEach((cat, val) -> sb.append(String.format("- %s: R$ %s\n", cat, val)));
+            return sb.toString();
+        }
+
         // Resposta padrão caso seja uma dúvida geral
         return "Olá! Sou seu assistente financeiro. Você pode dizer coisas como: 'Qual é o meu saldo?', 'Gastei 45 no almoço' ou 'Ver extrato'.";
     }
@@ -74,6 +83,17 @@ public class FinanceAssistantService {
 
     public List<Transaction> getTransactions() {
         return Collections.unmodifiableList(transactions);
+    }
+
+    // --- MELHORIA SIMPLES: Resumo de gastos por categoria ---
+    public Map<String, BigDecimal> getExpensesByCategory() {
+        Map<String, BigDecimal> summary = new HashMap<>();
+        for (Transaction t : transactions) {
+            if ("DESPESA".equalsIgnoreCase(t.type())) {
+                summary.merge(t.category(), t.amount(), BigDecimal::add);
+            }
+        }
+        return Collections.unmodifiableMap(summary);
     }
 
     private BigDecimal extractAmount(String text) {
